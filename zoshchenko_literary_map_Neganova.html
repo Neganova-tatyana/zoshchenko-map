@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_c66c2b6bd59c1b9aa188c8d3db84b7f3 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+    <script src="https://cdn.jsdelivr.net/gh/ljagis/leaflet-measure@2.1.7/dist/leaflet-measure.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/ljagis/leaflet-measure@2.1.7/dist/leaflet-measure.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.Default.css"/>
+    <script src="https://cdn.jsdelivr.net/gh/marslan390/BeautifyMarker/leaflet-beautify-marker-icon.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/marslan390/BeautifyMarker/leaflet-beautify-marker-icon.min.css"/>
+</head>
+<body>
+    
+    
+<div id="legend-container" style="
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 320px;
+    max-height: 80vh;
+    overflow-y: auto;
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid #ccc;
+    border-radius: 12px;
+    padding: 12px;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+    <h4 style="margin: 0; color: #333;">🌾 Деревни и сёла у Зощенко: сдвинутая география</h4>
+    <button onclick="toggleLegend()" style="
+        background: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 20px;
+        padding: 2px 12px;
+        cursor: pointer;
+        font-size: 11px;
+    ">Свернуть</button>
+</div>
+
+<div id="legend-content">
+
+<div style="margin-bottom: 12px; padding: 8px; background: #f9f9e0; border-radius: 8px; font-size: 11px; border-left: 3px solid #ff6b35;">
+    <b>📖 Суть карты:</b><br>
+    У Зощенко эти деревни находятся рядом по сюжету.<br>
+    В реальности они разбросаны по разным регионам.<br>
+    <b>Оранжевые линии</b> показывают этот разрыв.
+</div>
+
+<div style="margin-bottom: 8px;"><b>📍 Реальные деревни:</b></div>
+<div style="margin-left: 10px; margin-bottom: 5px;">
+    <span style="display: inline-block; width: 14px; height: 14px; background: purple; border-radius: 50%; margin-right: 8px; vertical-align: middle;"></span>
+    Лаптёнки <span style="color: #666; font-size: 10px;">(4 точки — приблизьте)</span>
+</div>
+<div style="margin-left: 10px; margin-bottom: 5px;">
+    <span style="display: inline-block; width: 14px; height: 14px; background: pink; border-radius: 50%; margin-right: 8px; vertical-align: middle;"></span>
+    Гусино
+</div>
+<div style="margin-left: 10px; margin-bottom: 5px;">
+    <span style="display: inline-block; width: 14px; height: 14px; background: lightgreen; border-radius: 50%; margin-right: 8px; vertical-align: middle;"></span>
+    Стружки
+</div>
+<div style="margin-left: 10px; margin-bottom: 5px;">
+    <span style="display: inline-block; width: 14px; height: 14px; background: beige; border: 1px solid #ccc; border-radius: 50%; margin-right: 8px; vertical-align: middle;"></span>
+    Тычкино
+</div>
+<div style="margin-left: 10px; margin-bottom: 5px;">
+    <span style="display: inline-block; width: 14px; height: 14px; background: lightblue; border-radius: 50%; margin-right: 8px; vertical-align: middle;"></span>
+    Усачи
+</div>
+
+<div style="margin: 10px 0 8px 0;"><b>⭐ Особые объекты:</b></div>
+<div style="margin-left: 10px;">
+    <span style="color: darkblue; font-size: 14px;">●</span> Калуга<br>
+    <span style="color: #d4af37; font-size: 14px;">✝</span> Почаевская лавра
+</div>
+
+<div style="margin: 10px 0 8px 0;"><b>🔧 Конструктор (включите слой справа):</b></div>
+<div style="margin-left: 10px; font-size: 11px; color: #555;">
+    <span style="color: lightgray; font-size: 14px;">●</span> Компоненты "Гнилых Прудков"<br>
+    <span style="color: gray; font-size: 14px;">●</span> Фантомная деревня — сборный образ
+</div>
+
+<div style="margin-top: 10px; padding: 8px; background: #f0f8ff; border-radius: 8px; text-align: center; font-size: 11px;">
+    📏 <b>Кликните на оранжевую линию</b> — узнаете реальное расстояние<br>
+    📐 Или используйте линейку <b>📐</b> справа вверху
+</div>
+
+<div style="font-size: 10px; color: #999; text-align: center; margin-top: 8px;">
+    💡 Альтернативные локации деревень — в слоях справа вверху
+</div>
+</div>
+</div>
+
+<script>
+function toggleLegend() {
+    var content = document.getElementById('legend-content');
+    var btn = document.querySelector('#legend-container button');
+    if (content.style.display === 'none') {
+        content.style.display = 'block';
+        btn.textContent = 'Свернуть';
+    } else {
+        content.style.display = 'none';
+        btn.textContent = 'Развернуть';
+    }
+}
+</script>
+    
+<div style="
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(30, 30, 40, 0.85);
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    padding: 8px 15px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 11px;
+    color: #ddd;
+    z-index: 9999;
+    text-align: right;
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    pointer-events: none;
+">
+    <div style="font-weight: bold; color: #ffd966;">Неганова Татьяна</div>
+    <div>DigitalClio · <a href="https://teletype.in/@digitalclio" target="_blank" style="color: #aaa; text-decoration: none; pointer-events: auto;">teletype.in/@digitalclio</a></div>
+    <div style="font-size: 10px; color: #888;">2026</div>
+</div>
+    
+            <div class="folium-map" id="map_c66c2b6bd59c1b9aa188c8d3db84b7f3" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_c66c2b6bd59c1b9aa188c8d3db84b7f3 = L.map(
+                "map_c66c2b6bd59c1b9aa188c8d3db84b7f3",
+                {
+                    center: [55.0, 45.0],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 4,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_ff87c1a9b2488d65fa4e13cf960d275b = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_ff87c1a9b2488d65fa4e13cf960d275b.addTo(map_c66c2b6bd59c1b9aa188c8d3db84b7f3);
+        
+    
+            var tile_layer_622ded6984d0580b64a74effa8ebddf8 = L.tileLayer(
+                "Stamen Terrain",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL.",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_622ded6984d0580b64a74effa8ebddf8.addTo(map_c66c2b6bd59c1b9aa188c8d3db84b7f3);
+        
+    
+            var measure_control_1e5f96cb18c4998c9985bcae2b755a50 = new L.Control.Measure(
+                {
+  "position": "topright",
+  "primaryLengthUnit": "kilometers",
+  "secondaryLengthUnit": "miles",
+  "primaryAreaUnit": "sqmeters",
+  "secondaryAreaUnit": "acres",
+});
+            map_c66c2b6bd59c1b9aa188c8d3db84b7f3.addControl(measure_control_1e5f96cb18c4998c9985bcae2b755a50);
+
+            // Workaround for using this plugin with Leaflet>=1.8.0
+            // https://github.com/ljagis/leaflet-measure/issues/171
+            L.Control.Measure.include({
+                _setCaptureMarkerIcon: function () {
+                    // disable autopan
+                    this._captureMarker.options.autoPanOnFocus = false;
+                    // default function
+                    this._captureMarker.setIcon(
+                        L.divIcon({
+                            iconSize: this._map.getSize().multiplyBy(2)
+                        })
+                    );
+                },
+            });
+
+        
+    
+            var marker_cluster_7a737b2b4919d07ba2f43c9f69c44afd = L.markerClusterGroup(
+                {
+}
+            );
+        
+    
+            var marker_3e45095bf3d313eb4ff76da0099b7c7c = L.marker(
+                [57.894, 47.9137],
+                {
+}
+            ).addTo(marker_cluster_7a737b2b4919d07ba2f43c9f69c44afd);
+        
+    
+            var icon_01562da61f38bb61ccba387bc02c4c63 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "purple",
+  "iconColor": "white",
+  "icon": "home",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_cf643dce13cee98f478ee60149d75ba8 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_410021d6daeda384774dfe18f2a93bdd = $(`<div id="html_410021d6daeda384774dfe18f2a93bdd" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial, sans-serif; max-width: 250px;">             <b style="color: black;">Лаптёнки</b><br>             <i>Реальный топоним</i><br>             📍 Кировская обл. (Котельнический район)<br>             🏠 деревня<br>📏 Расстояние до Гусино: 1075.9 км         </div>         </div>`)[0];
+                popup_cf643dce13cee98f478ee60149d75ba8.setContent(html_410021d6daeda384774dfe18f2a93bdd);
+            
+        
+
+        marker_3e45095bf3d313eb4ff76da0099b7c7c.bindPopup(popup_cf643dce13cee98f478ee60149d75ba8)
+        ;
+
+        
+    
+    
+                marker_3e45095bf3d313eb4ff76da0099b7c7c.setIcon(icon_01562da61f38bb61ccba387bc02c4c63);
+            
+    
+            var marker_29146132d11fee852c0cdfc34eaa9a93 = L.marker(
+                [58.0547, 49.6953],
+                {
+}
+            ).addTo(marker_cluster_7a737b2b4919d07ba2f43c9f69c44afd);
+        
+    
+            var icon_49fc6765059194fdc0b62af465c89fbb = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "purple",
+  "iconColor": "white",
+  "icon": "home",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_bf1b00c386112439c598ef5b70154c14 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_759558f1a41889f551750d042d86f92d = $(`<div id="html_759558f1a41889f551750d042d86f92d" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial, sans-serif; max-width: 250px;">             <b style="color: black;">Лаптёнки</b><br>             <i>Реальный топоним</i><br>             📍 Кировская обл. (Куменский район)<br>             🏠 деревня (альтернативная локация)         </div>         </div>`)[0];
+                popup_bf1b00c386112439c598ef5b70154c14.setContent(html_759558f1a41889f551750d042d86f92d);
+            
+        
+
+        marker_29146132d11fee852c0cdfc34eaa9a93.bindPopup(popup_bf1b00c386112439c598ef5b70154c14)
+        ;
+
+        
+    
+    
+                marker_29146132d11fee852c0cdfc34eaa9a93.setIcon(icon_49fc6765059194fdc0b62af465c89fbb);
+            
+    
+            var marker_d6d3680b05e91d039ed8a39343b8f4c7 = L.marker(
+                [57.8048, 47.6113],
+                {
+}
+            ).addTo(marker_cluster_7a737b2b4919d07ba2f43c9f69c44afd);
+        
+    
+            var icon_f59692dcf8bea3c5b7c53d5fdd1496e4 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "purple",
+  "iconColor": "white",
+  "icon": "home",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_7c18d859d134832fd4211287ed526e59 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_393efeccb68d981e8dc6450081b49e70 = $(`<div id="html_393efeccb68d981e8dc6450081b49e70" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial, sans-serif; max-width: 250px;">             <b style="color: black;">Лаптёнки</b><br>             <i>Реальный топоним</i><br>             📍 Кировская обл. (Тужинский район)<br>             🏠 деревня (альтернативная локация)         </div>         </div>`)[0];
+                popup_7c18d859d134832fd4211287ed526e59.setContent(html_393efeccb68d981e8dc6450081b49e70);
+            
+        
+
+        marker_d6d3680b05e91d039ed8a39343b8f4c7.bindPopup(popup_7c18d859d134832fd4211287ed526e59)
+        ;
+
+        
+    
+    
+                marker_d6d3680b05e91d039ed8a39343b8f4c7.setIcon(icon_f59692dcf8bea3c5b7c53d5fdd1496e4);
+            
+    
+            var marker_e8e4d49d44cd70db6e441bd47f55eeb0 = L.marker(
+                [58.4833, 47.45],
+                {
+}
+            ).addTo(marker_cluster_7a737b2b4919d07ba2f43c9f69c44afd);
+        
+    
+            var icon_ad7bfb29e972eaba3edddece71998155 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "purple",
+  "iconColor": "white",
+  "icon": "home",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_d25c7e85e00b52de2d9f15b157054208 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_4aabc9e5f5a6134868064d598beae07d = $(`<div id="html_4aabc9e5f5a6134868064d598beae07d" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial, sans-serif; max-width: 250px;">             <b style="color: black;">Лаптёнки</b><br>             <i>Реальный топоним</i><br>             📍 Кировская обл. (Свечинский район)<br>             🏠 деревня (альтернативная локация)         </div>         </div>`)[0];
+                popup_d25c7e85e00b52de2d9f15b157054208.setContent(html_4aabc9e5f5a6134868064d598beae07d);
+            
+        
+
+        marker_e8e4d49d44cd70db6e441bd47f55eeb0.bindPopup(popup_d25c7e85e00b52de2d9f15b157054208)
+        ;
+
+        
+    
+    
+                marker_e8e4d49d44cd70db6e441bd47f55eeb0.setIcon(icon_ad7bfb29e972eaba3edddece71998155);
+            
+    
+            marker_cluster_7a737b2b4919d07ba2f43c9f69c44afd.addTo(map_c66c2b6bd59c1b9aa188c8d3db84b7f3);
+        
+    
+            var marker_9632d97521d2f99a97f387019a47cf65 = L.marker(
+                [54.7075, 31.3905],
+                {
+}
+            ).addTo(map_c66c2b6bd59c1b9aa188c8d3db84b7f3);
+        
+    
+            var icon_e620c1c1b599fcaa245e9fefa455db82 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "pink",
+  "iconColor": "white",
+  "icon": "home",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_cec54bfe463613fc34d6c0cd1d8ca229 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_d3b602de1d513a0e992f4457a4217105 = $(`<div id="html_d3b602de1d513a0e992f4457a4217105" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial, sans-serif; max-width: 250px;">                 <b style="color: black;">Гусино</b><br>                 <i>Реальный топоним</i><br>                 📍 Смоленская обл. (Краснинский район)<br>                 🏠 деревня<br>📏 Расстояние до Лаптёнок: 1075.9 км             </div>             </div>`)[0];
+                popup_cec54bfe463613fc34d6c0cd1d8ca229.setContent(html_d3b602de1d513a0e992f4457a4217105);
+            
+        
+
+        marker_9632d97521d2f99a97f387019a47cf65.bindPopup(popup_cec54bfe463613fc34d6c0cd1d8ca229)
+        ;
+
+        
+    
+    
+                marker_9632d97521d2f99a97f387019a47cf65.setIcon(icon_e620c1c1b599fcaa245e9fefa455db82);
+            
+    
+            var marker_d483f4320cd81a6f95c3953dd28753ea = L.marker(
+                [54.7067, 31.4078],
+                {
+}
+            ).addTo(map_c66c2b6bd59c1b9aa188c8d3db84b7f3);
+        
+    
+            var icon_2c5c2d2a35d3369fb7bbf352761a58a2 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "pink",
+  "iconColor": "white",
+  "icon": "home",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_4ca823a3d1b52d60a3d2120d1d4fc3e7 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a0e89933f934f4137f56ab999883507a = $(`<div id="html_a0e89933f934f4137f56ab999883507a" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial, sans-serif; max-width: 250px;">                 <b style="color: black;">Гусино</b><br>                 <i>Реальный топоним</i><br>                 📍 Смоленская обл. (Смоленский район)<br>                 🏠 деревня (альтернативная локация)             </div>             </div>`)[0];
+                popup_4ca823a3d1b52d60a3d2120d1d4fc3e7.setContent(html_a0e89933f934f4137f56ab999883507a);
+            
+        
+
+        marker_d483f4320cd81a6f95c3953dd28753ea.bindPopup(popup_4ca823a3d1b52d60a3d2120d1d4fc3e7)
+        ;
+
+        
+    
+    
+                marker_d483f4320cd81a6f95c3953dd28753ea.setIcon(icon_2c5c2d2a35d3369fb7bbf352761a58a2);
+            
+    
+            var marker_d72f76db901b9dee13567db7de32ede4 = L.marker(
+                [59.186667, 29.425],
+                {
+}
+            ).addTo(map_c66c2b6bd59c1b9aa188c8d3db84b7f3);
+        
+    
+            var icon_a29f6e2511d0aa4f2fc81ba4a42bcdaa = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "pink",
+  "iconColor": "white",
+  "icon": "home",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_c192fa54905571e3b4130b238878ff2c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_6651e26d2d2dd92a0b271e756dd346e5 = $(`<div id="html_6651e26d2d2dd92a0b271e756dd346e5" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial, sans-serif; max-width: 250px;">                 <b style="color: black;">Гусино</b><br>                 <i>Реальный топоним</i><br>                 📍 Ленинградская обл.<br>                 🏠 уничтожена в ВОВ (альтернативная локация)             </div>             </div>`)[0];
+                popup_c192fa54905571e3b4130b238878ff2c.setContent(html_6651e26d2d2dd92a0b271e756dd346e5);
+            
+        
+
+        marker_d72f76db901b9dee13567db7de32ede4.bindPopup(popup_c192fa54905571e3b4130b238878ff2c)
+        ;
+
+        
+    
+    
+                marker_d72f76db901b9dee13567db7de32ede4.setIcon(icon_a29f6e2511d0aa4f2fc81ba4a42bcdaa);
+            
+    
+            var marker_57de9d5399fe3ca780e407725921dc16 = L.marker(
+                [56.515166, 29.688637],
+                {
+}
+            ).addTo(map_c66c2b6bd59c1b9aa188c8d3db84b7f3);
+        
+    
+            var icon_1ff13f5cb281d54df508689a42085db6 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightgreen",
+  "iconColor": "white",
+  "icon": "home",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_f27064e9b9f3ca037dd70c90431b7304 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_de5f04372f8956ce1c348a6a5f401410 = $(`<div id="html_de5f04372f8956ce1c348a6a5f401410" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial, sans-serif; max-width: 250px;">                 <b style="color: black;">Стружки</b><br>                 <i>Реальный топоним</i><br>                 📍 Псковская обл.<br>                 🏠 деревня<br>📏 Расстояние до Тычкино: 2891.9 км             </div>             </div>`)[0];
+                popup_f27064e9b9f3ca037dd70c90431b7304.setContent(html_de5f04372f8956ce1c348a6a5f401410);
+            
+        
+
+        marker_57de9d5399fe3ca780e407725921dc16.bindPopup(popup_f27064e9b9f3ca037dd70c90431b7304)
+        ;
+
+        
+    
+    
+                marker_57de9d5399fe3ca780e407725921dc16.setIcon(icon_1ff13f5cb281d54df508689a42085db6);
+            
+    
+            var marker_675660c1c26e67a80fda304d4e47eedb = L.marker(
+                [50.9833, 20.95],
+                {
+}
+            ).addTo(map_c66c2b6bd59c1b9aa188c8d3db84b7f3);
+        
+    
+            var icon_430a8d9b5f2668b0f146668e4bc70028 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightgreen",
+  "iconColor": "white",
+  "icon": "home",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_bb61379a9ad11d8ee33bd14c1202387d = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_0c449aa7ad6cd4e66cd1223ffb4f9430 = $(`<div id="html_0c449aa7ad6cd4e66cd1223ffb4f9430" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial, sans-serif; max-width: 250px;">                 <b style="color: black;">Стружки</b><br>                 <i>Реальный топоним</i><br>                 📍 Польша (координаты приблизительные)<br>                 🏠 деревня (альтернативная локация)             </div>             </div>`)[0];
+                popup_bb61379a9ad11d8ee33bd14c1202387d.setContent(html_0c449aa7ad6cd4e66cd1223ffb4f9430);
+            
+        
+
+        marker_675660c1c26e67a80fda304d4e47eedb.bindPopup(popup_bb61379a9ad11d8ee33bd14c1202387d)
+        ;
+
+        
+    
+    
+                marker_675660c1c26e67a80fda304d4e47eedb.setIcon(icon_430a8d9b5f2668b0f146668e4bc70028);
+            
+    
+            var marker_e67361a2edf3f4407c6c2dd9b87b477b = L.marker(
+                [56.193333, 77.608056],
+                {
+}
+            ).addTo(map_c66c2b6bd59c1b9aa188c8d3db84b7f3);
+        
+    
+            var icon_c45e78e737546fac5dd379ac384757cc = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "beige",
+  "iconColor": "white",
+  "icon": "home",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_b47c71619865a61b958179e96f2e100c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_93fe0d69642b632b9b1b3a673a5d79e9 = $(`<div id="html_93fe0d69642b632b9b1b3a673a5d79e9" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial, sans-serif; max-width: 250px;">                 <b style="color: black;">Тычкино</b><br>                 <i>Реальный топоним</i><br>                 📍 Новосибирская обл.<br>                 🏠 деревня<br>📏 Расстояние до Стружек: 2891.9 км             </div>             </div>`)[0];
+                popup_b47c71619865a61b958179e96f2e100c.setContent(html_93fe0d69642b632b9b1b3a673a5d79e9);
+            
+        
+
+        marker_e67361a2edf3f4407c6c2dd9b87b477b.bindPopup(popup_b47c71619865a61b958179e96f2e100c)
+        ;
+
+        
+    
+    
+                marker_e67361a2edf3f4407c6c2dd9b87b477b.setIcon(icon_c45e78e737546fac5dd379ac384757cc);
+            
+    
+            var marker_8bcd70f4955dd80b2690c862f63a4066 = L.marker(
+                [54.105833, 77.785555],
+                {
+}
+            ).addTo(map_c66c2b6bd59c1b9aa188c8d3db84b7f3);
+        
+    
+            var icon_6947fb9e446d691aa62ef1cb76fdbc10 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "beige",
+  "iconColor": "white",
+  "icon": "home",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_7b4032a4e86af2f376130f0bd5251b6b = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f6d54ad033f73c8d9b93f336f7304405 = $(`<div id="html_f6d54ad033f73c8d9b93f336f7304405" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial, sans-serif; max-width: 250px;">                 <b style="color: black;">Тычкино</b><br>                 <i>Реальный топоним</i><br>                 📍 Новосибирская обл. (Баганский район)<br>                 🏠 село (альтернативная локация)             </div>             </div>`)[0];
+                popup_7b4032a4e86af2f376130f0bd5251b6b.setContent(html_f6d54ad033f73c8d9b93f336f7304405);
+            
+        
+
+        marker_8bcd70f4955dd80b2690c862f63a4066.bindPopup(popup_7b4032a4e86af2f376130f0bd5251b6b)
+        ;
+
+        
+    
+    
+                marker_8bcd70f4955dd80b2690c862f63a4066.setIcon(icon_6947fb9e446d691aa62ef1cb76fdbc10);
+            
+    
+            var marker_5fdd20e71ae3857ce9a2995803a83b89 = L.marker(
+                [58.447, 49.654],
+                {
+}
+            ).addTo(map_c66c2b6bd59c1b9aa188c8d3db84b7f3);
+        
+    
+            var icon_15ba2cacc06cddaf00a6d76788fa9e8a = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightblue",
+  "iconColor": "white",
+  "icon": "home",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_ec1f2990c0f616066ea810ff8a95c93c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_79c9dd9202a1fdf905b831120ba5008c = $(`<div id="html_79c9dd9202a1fdf905b831120ba5008c" style="width: 100.0%; height: 100.0%;">             <div style="font-family: Arial, sans-serif; max-width: 250px;">                 <b style="color: black;">Усачи</b><br>                 <i>Реальный топоним</i><br>                 📍 Кировская обл. (координаты приблизительные)<br>                 🏠 деревня<br>📏 Расстояние до Калуги: 927.9 км             </div>             </div>`)[0];
+                popup_ec1f2990c0f616066ea810ff8a95c93c.setContent(html_79c9dd9202a1fdf905b831120ba5008c);
+            
+        
+
+        marker_5fdd20e71ae3857ce9a2995803a83b89.bindPopup(popup_ec1f2990c0f616066ea810ff8a95c93c)
+        ;
+
+        
+    
+    
+                marker_5fdd20e71ae3857ce9a2995803a83b89.setIcon(icon_15ba2cacc06cddaf00a6d76788fa9e8a);
+            
+    
+            var feature_group_698dbb83b057d86986384940347e4340 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var marker_d4817b7e18f1e48b38fd38743c502ff3 = L.marker(
+                [53.284, 37.778901],
+                {
+}
+            ).addTo(feature_group_698dbb83b057d86986384940347e4340);
+        
+    
+            var icon_c4a349836ceae3f5036028a215219d92 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightgray",
+  "iconColor": "white",
+  "icon": "puzzle-piece",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_b59ffe4dfb44a8db6f39895b67a50b46 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_bb046bc0978309c6aa780e1524b34757 = $(`<div id="html_bb046bc0978309c6aa780e1524b34757" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial, sans-serif; max-width: 250px;">             <b style="color: black;">Гнилые Озерки</b><br>             <i>Компонент для фантома</i><br>             📍 Тульская область<br>             <small>Зощенко мог смешать: "Гнилые" + "Прудки"</small>         </div>         </div>`)[0];
+                popup_b59ffe4dfb44a8db6f39895b67a50b46.setContent(html_bb046bc0978309c6aa780e1524b34757);
+            
+        
+
+        marker_d4817b7e18f1e48b38fd38743c502ff3.bindPopup(popup_b59ffe4dfb44a8db6f39895b67a50b46)
+        ;
+
+        
+    
+    
+                marker_d4817b7e18f1e48b38fd38743c502ff3.setIcon(icon_c4a349836ceae3f5036028a215219d92);
+            
+    
+            var marker_413c18d3284984e7888c9437076f7b29 = L.marker(
+                [51.747977, 38.572573],
+                {
+}
+            ).addTo(feature_group_698dbb83b057d86986384940347e4340);
+        
+    
+            var icon_b3858ffcd78f068a6e0c861fcb9335aa = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightgray",
+  "iconColor": "white",
+  "icon": "puzzle-piece",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_991ba48bab49bd74c0cea7812a8e0ca7 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f7aac73a4b3cc64364e0213bbf1d618e = $(`<div id="html_f7aac73a4b3cc64364e0213bbf1d618e" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial, sans-serif; max-width: 250px;">             <b style="color: black;">Гнилуша</b><br>             <i>Компонент для фантома</i><br>             📍 Воронежская обл.<br>             <small>Зощенко мог смешать: "Гнилые" + "Прудки"</small>         </div>         </div>`)[0];
+                popup_991ba48bab49bd74c0cea7812a8e0ca7.setContent(html_f7aac73a4b3cc64364e0213bbf1d618e);
+            
+        
+
+        marker_413c18d3284984e7888c9437076f7b29.bindPopup(popup_991ba48bab49bd74c0cea7812a8e0ca7)
+        ;
+
+        
+    
+    
+                marker_413c18d3284984e7888c9437076f7b29.setIcon(icon_b3858ffcd78f068a6e0c861fcb9335aa);
+            
+    
+            var marker_38e871073b7087b46098a7cf88b5784c = L.marker(
+                [54.135, 34.506944],
+                {
+}
+            ).addTo(feature_group_698dbb83b057d86986384940347e4340);
+        
+    
+            var icon_e8aae2ab5e17804ad772c050d69b36d2 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "lightgray",
+  "iconColor": "white",
+  "icon": "puzzle-piece",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_45724e742476182e99ef9fbc0945c510 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_3993f89973873611f5146b08eb169f9c = $(`<div id="html_3993f89973873611f5146b08eb169f9c" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial, sans-serif; max-width: 250px;">             <b style="color: black;">Прудки</b><br>             <i>Компонент для фантома</i><br>             📍 Калужская обл.<br>             <small>Зощенко мог смешать: "Гнилые" + "Прудки"</small>         </div>         </div>`)[0];
+                popup_45724e742476182e99ef9fbc0945c510.setContent(html_3993f89973873611f5146b08eb169f9c);
+            
+        
+
+        marker_38e871073b7087b46098a7cf88b5784c.bindPopup(popup_45724e742476182e99ef9fbc0945c510)
+        ;
+
+        
+    
+    
+                marker_38e871073b7087b46098a7cf88b5784c.setIcon(icon_e8aae2ab5e17804ad772c050d69b36d2);
+            
+    
+            var marker_08950979cb1793f22c0c615b887cec73 = L.marker(
+                [53.055659, 36.952806],
+                {
+}
+            ).addTo(feature_group_698dbb83b057d86986384940347e4340);
+        
+    
+            var icon_cac87250f188292a78a7b45d5ac31bee = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "gray",
+  "iconColor": "white",
+  "icon": "question-circle",
+  "prefix": "fa",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_feb9cd7ea37a4771c514542aeca85335 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_ab37c78b537c2d310a488274ace97a68 = $(`<div id="html_ab37c78b537c2d310a488274ace97a68" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; max-width: 250px;">         <b style="color: black;">🎭 Гнилые Прудки</b><br>         <i>Фантомная деревня Зощенко</i><br>         ⚠️ Не существует на карте<br>         🔧 Сконструирована из компонентов     </div>     </div>`)[0];
+                popup_feb9cd7ea37a4771c514542aeca85335.setContent(html_ab37c78b537c2d310a488274ace97a68);
+            
+        
+
+        marker_08950979cb1793f22c0c615b887cec73.bindPopup(popup_feb9cd7ea37a4771c514542aeca85335)
+        ;
+
+        
+    
+    
+                marker_08950979cb1793f22c0c615b887cec73.setIcon(icon_cac87250f188292a78a7b45d5ac31bee);
+            
+    
+            var poly_line_7d6b5cb5df330b6cada0924325a451ed = L.polyline(
+                [[57.894, 47.9137], [54.7075, 31.3905]],
+                {"bubblingMouseEvents": true, "color": "#ff6b35", "dashArray": "6, 6", "dashOffset": null, "fill": false, "fillColor": "#ff6b35", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.9, "smoothFactor": 1.0, "stroke": true, "weight": 3.5}
+            ).addTo(map_c66c2b6bd59c1b9aa188c8d3db84b7f3);
+        
+    
+        var popup_bb8f9ad523230128720e200c271914fa = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_db3f68003b0ebfc7a8205dd8fed7bd77 = $(`<div id="html_db3f68003b0ebfc7a8205dd8fed7bd77" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; text-align: center;">         <b>📖 У Зощенко — соседние деревни</b><br>         <span style="font-size: 13px;">📍 В реальности: 1075.9 км</span><br>         <span style="font-size: 11px; color: #666;">📐 Альтернативные локации — включите слой справа</span>     </div>     </div>`)[0];
+                popup_bb8f9ad523230128720e200c271914fa.setContent(html_db3f68003b0ebfc7a8205dd8fed7bd77);
+            
+        
+
+        poly_line_7d6b5cb5df330b6cada0924325a451ed.bindPopup(popup_bb8f9ad523230128720e200c271914fa)
+        ;
+
+        
+    
+    
+            var poly_line_034dcb66122d69ad2b80f5eeff8367b9 = L.polyline(
+                [[56.193333, 77.608056], [56.515166, 29.688637]],
+                {"bubblingMouseEvents": true, "color": "#ff6b35", "dashArray": "6, 6", "dashOffset": null, "fill": false, "fillColor": "#ff6b35", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.9, "smoothFactor": 1.0, "stroke": true, "weight": 3.5}
+            ).addTo(map_c66c2b6bd59c1b9aa188c8d3db84b7f3);
+        
+    
+        var popup_d89295210e36c1f2ac9b06eb8d369651 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_1c5895e8077faeb10c7521f85d01f591 = $(`<div id="html_1c5895e8077faeb10c7521f85d01f591" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; text-align: center;">         <b>📖 У Зощенко — в одном районе</b><br>         <span style="font-size: 13px;">📍 В реальности: 2891.9 км</span><br>         <span style="font-size: 11px; color: #666;">📐 Альтернативные локации — включите слой справа</span>     </div>     </div>`)[0];
+                popup_d89295210e36c1f2ac9b06eb8d369651.setContent(html_1c5895e8077faeb10c7521f85d01f591);
+            
+        
+
+        poly_line_034dcb66122d69ad2b80f5eeff8367b9.bindPopup(popup_d89295210e36c1f2ac9b06eb8d369651)
+        ;
+
+        
+    
+    
+            var poly_line_ad4c9cb1adb4c90f80cd5d524a059742 = L.polyline(
+                [[56.193333, 77.608056], [50.004722, 25.506944]],
+                {"bubblingMouseEvents": true, "color": "#ff6b35", "dashArray": "6, 6", "dashOffset": null, "fill": false, "fillColor": "#ff6b35", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.9, "smoothFactor": 1.0, "stroke": true, "weight": 3.5}
+            ).addTo(map_c66c2b6bd59c1b9aa188c8d3db84b7f3);
+        
+    
+        var popup_9d02acdfaeda3df5c99c4a0e30347c72 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_fe3eccd914043de6dd77454514112058 = $(`<div id="html_fe3eccd914043de6dd77454514112058" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; text-align: center;">         <b>📖 Тычкино и Почаевская лавра (у Зощенко рядом)</b><br>         <span style="font-size: 13px;">📍 В реальности: 3458.6 км</span>     </div>     </div>`)[0];
+                popup_9d02acdfaeda3df5c99c4a0e30347c72.setContent(html_fe3eccd914043de6dd77454514112058);
+            
+        
+
+        poly_line_ad4c9cb1adb4c90f80cd5d524a059742.bindPopup(popup_9d02acdfaeda3df5c99c4a0e30347c72)
+        ;
+
+        
+    
+    
+            var poly_line_df80cbe91ed33317ebad89b65c2a7990 = L.polyline(
+                [[56.515166, 29.688637], [50.004722, 25.506944]],
+                {"bubblingMouseEvents": true, "color": "#ff6b35", "dashArray": "6, 6", "dashOffset": null, "fill": false, "fillColor": "#ff6b35", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.9, "smoothFactor": 1.0, "stroke": true, "weight": 3.5}
+            ).addTo(map_c66c2b6bd59c1b9aa188c8d3db84b7f3);
+        
+    
+        var popup_adad41e35e4129304702c516e176d582 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_14a8fadc2bd853b571658c2f0c3238ce = $(`<div id="html_14a8fadc2bd853b571658c2f0c3238ce" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; text-align: center;">         <b>📖 Стружки и Почаевская лавра (у Зощенко рядом)</b><br>         <span style="font-size: 13px;">📍 В реальности: 775.2 км</span>     </div>     </div>`)[0];
+                popup_adad41e35e4129304702c516e176d582.setContent(html_14a8fadc2bd853b571658c2f0c3238ce);
+            
+        
+
+        poly_line_df80cbe91ed33317ebad89b65c2a7990.bindPopup(popup_adad41e35e4129304702c516e176d582)
+        ;
+
+        
+    
+    
+            var poly_line_f3c08140cfd41fbbefb5f06916244e6b = L.polyline(
+                [[58.447, 49.654], [54.5, 36.3]],
+                {"bubblingMouseEvents": true, "color": "#ff6b35", "dashArray": "6, 6", "dashOffset": null, "fill": false, "fillColor": "#ff6b35", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.9, "smoothFactor": 1.0, "stroke": true, "weight": 3.5}
+            ).addTo(map_c66c2b6bd59c1b9aa188c8d3db84b7f3);
+        
+    
+        var popup_25528d3addb22e97a23a9f5bf94afae9 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_1f6e265df99ed18f115f1d160f1d00c8 = $(`<div id="html_1f6e265df99ed18f115f1d160f1d00c8" style="width: 100.0%; height: 100.0%;">     <div style="font-family: Arial, sans-serif; text-align: center;">         <b>📖 Усачи в Калужской губернии (у Зощенко)</b><br>         <span style="font-size: 13px;">📍 В реальности: 927.9 км от Калуги</span>     </div>     </div>`)[0];
+                popup_25528d3addb22e97a23a9f5bf94afae9.setContent(html_1f6e265df99ed18f115f1d160f1d00c8);
+            
+        
+
+        poly_line_f3c08140cfd41fbbefb5f06916244e6b.bindPopup(popup_25528d3addb22e97a23a9f5bf94afae9)
+        ;
+
+        
+    
+    
+            var feature_group_b05fae1309ca3c1d943bb089ba66af22 = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var poly_line_39adbb68050f882247cbe4724b7e56d7 = L.polyline(
+                [[57.894, 47.9137], [54.7067, 31.4078]],
+                {"bubblingMouseEvents": true, "color": "#ff9966", "dashArray": "6, 6", "dashOffset": null, "fill": false, "fillColor": "#ff9966", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b05fae1309ca3c1d943bb089ba66af22);
+        
+    
+        var popup_208b2942b11803bd862bf24ecf745570 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_28fa4606e2477c9b8963ba825d6161cc = $(`<div id="html_28fa4606e2477c9b8963ba825d6161cc" style="width: 100.0%; height: 100.0%;">📏 Расстояние: 1075.0 км</div>`)[0];
+                popup_208b2942b11803bd862bf24ecf745570.setContent(html_28fa4606e2477c9b8963ba825d6161cc);
+            
+        
+
+        poly_line_39adbb68050f882247cbe4724b7e56d7.bindPopup(popup_208b2942b11803bd862bf24ecf745570)
+        ;
+
+        
+    
+    
+            var poly_line_eedf13fd404869e7de0de84a26716d9c = L.polyline(
+                [[57.894, 47.9137], [59.186667, 29.425]],
+                {"bubblingMouseEvents": true, "color": "#ff9966", "dashArray": "6, 6", "dashOffset": null, "fill": false, "fillColor": "#ff9966", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b05fae1309ca3c1d943bb089ba66af22);
+        
+    
+        var popup_f14e7f77c2fb410d5594524fa26be2a1 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_65fa9770dfb57cdcfdfaf03be075b8f0 = $(`<div id="html_65fa9770dfb57cdcfdfaf03be075b8f0" style="width: 100.0%; height: 100.0%;">📏 Расстояние: 1079.0 км</div>`)[0];
+                popup_f14e7f77c2fb410d5594524fa26be2a1.setContent(html_65fa9770dfb57cdcfdfaf03be075b8f0);
+            
+        
+
+        poly_line_eedf13fd404869e7de0de84a26716d9c.bindPopup(popup_f14e7f77c2fb410d5594524fa26be2a1)
+        ;
+
+        
+    
+    
+            var poly_line_51e59f41aab2fc051d24bece0336b6f3 = L.polyline(
+                [[58.0547, 49.6953], [54.7075, 31.3905]],
+                {"bubblingMouseEvents": true, "color": "#ff9966", "dashArray": "6, 6", "dashOffset": null, "fill": false, "fillColor": "#ff9966", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b05fae1309ca3c1d943bb089ba66af22);
+        
+    
+        var popup_237211b5dab3f960e885aa493159b1df = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_90182b71ac057ee13b59436caa012a04 = $(`<div id="html_90182b71ac057ee13b59436caa012a04" style="width: 100.0%; height: 100.0%;">📏 Расстояние: 1182.5 км</div>`)[0];
+                popup_237211b5dab3f960e885aa493159b1df.setContent(html_90182b71ac057ee13b59436caa012a04);
+            
+        
+
+        poly_line_51e59f41aab2fc051d24bece0336b6f3.bindPopup(popup_237211b5dab3f960e885aa493159b1df)
+        ;
+
+        
+    
+    
+            var poly_line_d1490580649ba3659a812dae5721d561 = L.polyline(
+                [[58.0547, 49.6953], [54.7067, 31.4078]],
+                {"bubblingMouseEvents": true, "color": "#ff9966", "dashArray": "6, 6", "dashOffset": null, "fill": false, "fillColor": "#ff9966", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b05fae1309ca3c1d943bb089ba66af22);
+        
+    
+        var popup_e14a6375eac53abd6dcbead17d960ba3 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_abc03a18606b1566697f27e511e04367 = $(`<div id="html_abc03a18606b1566697f27e511e04367" style="width: 100.0%; height: 100.0%;">📏 Расстояние: 1181.5 км</div>`)[0];
+                popup_e14a6375eac53abd6dcbead17d960ba3.setContent(html_abc03a18606b1566697f27e511e04367);
+            
+        
+
+        poly_line_d1490580649ba3659a812dae5721d561.bindPopup(popup_e14a6375eac53abd6dcbead17d960ba3)
+        ;
+
+        
+    
+    
+            var poly_line_2340243b81d99ec2c75efbc80cacb26b = L.polyline(
+                [[58.0547, 49.6953], [59.186667, 29.425]],
+                {"bubblingMouseEvents": true, "color": "#ff9966", "dashArray": "6, 6", "dashOffset": null, "fill": false, "fillColor": "#ff9966", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b05fae1309ca3c1d943bb089ba66af22);
+        
+    
+        var popup_c974ad97ee8a17a237fd7b62b791ae99 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_718f43483abcfa78340616ece059195a = $(`<div id="html_718f43483abcfa78340616ece059195a" style="width: 100.0%; height: 100.0%;">📏 Расстояние: 1175.8 км</div>`)[0];
+                popup_c974ad97ee8a17a237fd7b62b791ae99.setContent(html_718f43483abcfa78340616ece059195a);
+            
+        
+
+        poly_line_2340243b81d99ec2c75efbc80cacb26b.bindPopup(popup_c974ad97ee8a17a237fd7b62b791ae99)
+        ;
+
+        
+    
+    
+            var poly_line_ec5ea6f075891e8cff676ba260a40cc8 = L.polyline(
+                [[57.8048, 47.6113], [54.7075, 31.3905]],
+                {"bubblingMouseEvents": true, "color": "#ff9966", "dashArray": "6, 6", "dashOffset": null, "fill": false, "fillColor": "#ff9966", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b05fae1309ca3c1d943bb089ba66af22);
+        
+    
+        var popup_9a48b78737019bcfc383280fa8337198 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_0b26deae75e74cb3fc33daa141e08333 = $(`<div id="html_0b26deae75e74cb3fc33daa141e08333" style="width: 100.0%; height: 100.0%;">📏 Расстояние: 1056.4 км</div>`)[0];
+                popup_9a48b78737019bcfc383280fa8337198.setContent(html_0b26deae75e74cb3fc33daa141e08333);
+            
+        
+
+        poly_line_ec5ea6f075891e8cff676ba260a40cc8.bindPopup(popup_9a48b78737019bcfc383280fa8337198)
+        ;
+
+        
+    
+    
+            var poly_line_df97f8237a262de4b2f2388526485f4a = L.polyline(
+                [[57.8048, 47.6113], [54.7067, 31.4078]],
+                {"bubblingMouseEvents": true, "color": "#ff9966", "dashArray": "6, 6", "dashOffset": null, "fill": false, "fillColor": "#ff9966", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b05fae1309ca3c1d943bb089ba66af22);
+        
+    
+        var popup_511c899221174751f2a0e0be48d35e34 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f352dfc57f43290367b2b32c3b71dae9 = $(`<div id="html_f352dfc57f43290367b2b32c3b71dae9" style="width: 100.0%; height: 100.0%;">📏 Расстояние: 1055.4 км</div>`)[0];
+                popup_511c899221174751f2a0e0be48d35e34.setContent(html_f352dfc57f43290367b2b32c3b71dae9);
+            
+        
+
+        poly_line_df97f8237a262de4b2f2388526485f4a.bindPopup(popup_511c899221174751f2a0e0be48d35e34)
+        ;
+
+        
+    
+    
+            var poly_line_42bd6b775c588285e93e393a01ab5cef = L.polyline(
+                [[57.8048, 47.6113], [59.186667, 29.425]],
+                {"bubblingMouseEvents": true, "color": "#ff9966", "dashArray": "6, 6", "dashOffset": null, "fill": false, "fillColor": "#ff9966", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b05fae1309ca3c1d943bb089ba66af22);
+        
+    
+        var popup_7d80f23f4013654bc96b4c3e32eddc2f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f2aa0f60039022f268c57762a19e8b6d = $(`<div id="html_f2aa0f60039022f268c57762a19e8b6d" style="width: 100.0%; height: 100.0%;">📏 Расстояние: 1064.4 км</div>`)[0];
+                popup_7d80f23f4013654bc96b4c3e32eddc2f.setContent(html_f2aa0f60039022f268c57762a19e8b6d);
+            
+        
+
+        poly_line_42bd6b775c588285e93e393a01ab5cef.bindPopup(popup_7d80f23f4013654bc96b4c3e32eddc2f)
+        ;
+
+        
+    
+    
+            var poly_line_e39cf189c4e92ef06e00f57fc2e00e8f = L.polyline(
+                [[58.4833, 47.45], [54.7075, 31.3905]],
+                {"bubblingMouseEvents": true, "color": "#ff9966", "dashArray": "6, 6", "dashOffset": null, "fill": false, "fillColor": "#ff9966", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b05fae1309ca3c1d943bb089ba66af22);
+        
+    
+        var popup_e66b473e87b65c511e9167a428914c8e = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_c7d1c15f148e3aa857655bba4f3ad5fb = $(`<div id="html_c7d1c15f148e3aa857655bba4f3ad5fb" style="width: 100.0%; height: 100.0%;">📏 Расстояние: 1065.7 км</div>`)[0];
+                popup_e66b473e87b65c511e9167a428914c8e.setContent(html_c7d1c15f148e3aa857655bba4f3ad5fb);
+            
+        
+
+        poly_line_e39cf189c4e92ef06e00f57fc2e00e8f.bindPopup(popup_e66b473e87b65c511e9167a428914c8e)
+        ;
+
+        
+    
+    
+            var poly_line_07830b99bcbe7ec5b1b70539dfd3e508 = L.polyline(
+                [[58.4833, 47.45], [54.7067, 31.4078]],
+                {"bubblingMouseEvents": true, "color": "#ff9966", "dashArray": "6, 6", "dashOffset": null, "fill": false, "fillColor": "#ff9966", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b05fae1309ca3c1d943bb089ba66af22);
+        
+    
+        var popup_5ff2444c8c0bfeede6240efffacab2ce = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_cb052ef60058f4e0ff6d8bc8c91cf564 = $(`<div id="html_cb052ef60058f4e0ff6d8bc8c91cf564" style="width: 100.0%; height: 100.0%;">📏 Расстояние: 1064.8 км</div>`)[0];
+                popup_5ff2444c8c0bfeede6240efffacab2ce.setContent(html_cb052ef60058f4e0ff6d8bc8c91cf564);
+            
+        
+
+        poly_line_07830b99bcbe7ec5b1b70539dfd3e508.bindPopup(popup_5ff2444c8c0bfeede6240efffacab2ce)
+        ;
+
+        
+    
+    
+            var poly_line_dffc3bb105e6738d7bdc11aba0d9ebeb = L.polyline(
+                [[58.4833, 47.45], [59.186667, 29.425]],
+                {"bubblingMouseEvents": true, "color": "#ff9966", "dashArray": "6, 6", "dashOffset": null, "fill": false, "fillColor": "#ff9966", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_b05fae1309ca3c1d943bb089ba66af22);
+        
+    
+        var popup_079290f73699fe8c68e04665fbd09322 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f0170e8debaa21023620d6571fcd60bf = $(`<div id="html_f0170e8debaa21023620d6571fcd60bf" style="width: 100.0%; height: 100.0%;">📏 Расстояние: 1037.0 км</div>`)[0];
+                popup_079290f73699fe8c68e04665fbd09322.setContent(html_f0170e8debaa21023620d6571fcd60bf);
+            
+        
+
+        poly_line_dffc3bb105e6738d7bdc11aba0d9ebeb.bindPopup(popup_079290f73699fe8c68e04665fbd09322)
+        ;
+
+        
+    
+    
+            var feature_group_32c5a351296bf3e31c5c43039cf1edcb = L.featureGroup(
+                {
+}
+            );
+        
+    
+            var poly_line_2aa14dc46bc6942dfff03d051d8d4b13 = L.polyline(
+                [[56.193333, 77.608056], [50.9833, 20.95]],
+                {"bubblingMouseEvents": true, "color": "#ff9966", "dashArray": "6, 6", "dashOffset": null, "fill": false, "fillColor": "#ff9966", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_32c5a351296bf3e31c5c43039cf1edcb);
+        
+    
+        var popup_7b8217c1ea757cb1857e620777bd7053 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_d753a5b9af3a27bb79651ecb02b517f4 = $(`<div id="html_d753a5b9af3a27bb79651ecb02b517f4" style="width: 100.0%; height: 100.0%;">📏 Расстояние: 3675.9 км</div>`)[0];
+                popup_7b8217c1ea757cb1857e620777bd7053.setContent(html_d753a5b9af3a27bb79651ecb02b517f4);
+            
+        
+
+        poly_line_2aa14dc46bc6942dfff03d051d8d4b13.bindPopup(popup_7b8217c1ea757cb1857e620777bd7053)
+        ;
+
+        
+    
+    
+            var poly_line_ecab32fc6c1328726b979b87fc5c0683 = L.polyline(
+                [[54.105833, 77.785555], [56.515166, 29.688637]],
+                {"bubblingMouseEvents": true, "color": "#ff9966", "dashArray": "6, 6", "dashOffset": null, "fill": false, "fillColor": "#ff9966", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_32c5a351296bf3e31c5c43039cf1edcb);
+        
+    
+        var popup_302007c9bbfc6ea9cd45c30cccc7fa5f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_81ca66148a014ccaa8a8616300b2f4f4 = $(`<div id="html_81ca66148a014ccaa8a8616300b2f4f4" style="width: 100.0%; height: 100.0%;">📏 Расстояние: 2992.7 км</div>`)[0];
+                popup_302007c9bbfc6ea9cd45c30cccc7fa5f.setContent(html_81ca66148a014ccaa8a8616300b2f4f4);
+            
+        
+
+        poly_line_ecab32fc6c1328726b979b87fc5c0683.bindPopup(popup_302007c9bbfc6ea9cd45c30cccc7fa5f)
+        ;
+
+        
+    
+    
+            var poly_line_ed940c4566b750cfb1a1415ae4ae7693 = L.polyline(
+                [[54.105833, 77.785555], [50.9833, 20.95]],
+                {"bubblingMouseEvents": true, "color": "#ff9966", "dashArray": "6, 6", "dashOffset": null, "fill": false, "fillColor": "#ff9966", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 2.5}
+            ).addTo(feature_group_32c5a351296bf3e31c5c43039cf1edcb);
+        
+    
+        var popup_86d8e1ce69ba051d8ee42a7eced3d701 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_af59ee4a629e1bdd5c0bdfc40981077d = $(`<div id="html_af59ee4a629e1bdd5c0bdfc40981077d" style="width: 100.0%; height: 100.0%;">📏 Расстояние: 3754.4 км</div>`)[0];
+                popup_86d8e1ce69ba051d8ee42a7eced3d701.setContent(html_af59ee4a629e1bdd5c0bdfc40981077d);
+            
+        
+
+        poly_line_ed940c4566b750cfb1a1415ae4ae7693.bindPopup(popup_86d8e1ce69ba051d8ee42a7eced3d701)
+        ;
+
+        
+    
+    
+            var marker_68d66760dd15b991a828b2cd82bcec66 = L.marker(
+                [54.5, 36.3],
+                {
+}
+            ).addTo(map_c66c2b6bd59c1b9aa188c8d3db84b7f3);
+        
+    
+            var icon_9a7b28d226ea7e477ab48b365e32964a = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "darkblue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_dda91d3e0196796dbdc0b199d36e6bcc = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_0dfc2baabe25b86b75f101eab50e946c = $(`<div id="html_0dfc2baabe25b86b75f101eab50e946c" style="width: 100.0%; height: 100.0%;"><b style="color: black;">Калуга</b><br>У Зощенко — губернский город</div>`)[0];
+                popup_dda91d3e0196796dbdc0b199d36e6bcc.setContent(html_0dfc2baabe25b86b75f101eab50e946c);
+            
+        
+
+        marker_68d66760dd15b991a828b2cd82bcec66.bindPopup(popup_dda91d3e0196796dbdc0b199d36e6bcc)
+        ;
+
+        
+    
+    
+                marker_68d66760dd15b991a828b2cd82bcec66.setIcon(icon_9a7b28d226ea7e477ab48b365e32964a);
+            
+    
+            var marker_595637a519f8ada99cc00b45bc12b6e2 = L.marker(
+                [50.004722, 25.506944],
+                {
+}
+            ).addTo(map_c66c2b6bd59c1b9aa188c8d3db84b7f3);
+        
+    
+            var beautify_icon_c64bd619bb3c336b1ba2541a34e09754 = new L.BeautifyIcon.icon(
+                {
+  "icon": "plus",
+  "iconShape": "marker-droplet",
+  "borderWidth": 3,
+  "borderColor": "#d4af37",
+  "textColor": "white",
+  "backgroundColor": "#d4af37",
+  "innerIconStyle": "font-size:16px;font-weight:bold;",
+  "spin": false,
+  "isAlphaNumericIcon": false,
+}
+            )
+            marker_595637a519f8ada99cc00b45bc12b6e2.setIcon(beautify_icon_c64bd619bb3c336b1ba2541a34e09754);
+        
+    
+        var popup_0a2f734a68534c378901f137007292f9 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_656a0e77d662af271b697ff01a0539e2 = $(`<div id="html_656a0e77d662af271b697ff01a0539e2" style="width: 100.0%; height: 100.0%;"><b style="color: black;">Почаевская лавра</b><br>Упоминается в тех же рассказах, что Тычкино и Стружки</div>`)[0];
+                popup_0a2f734a68534c378901f137007292f9.setContent(html_656a0e77d662af271b697ff01a0539e2);
+            
+        
+
+        marker_595637a519f8ada99cc00b45bc12b6e2.bindPopup(popup_0a2f734a68534c378901f137007292f9)
+        ;
+
+        
+    
+    
+                marker_595637a519f8ada99cc00b45bc12b6e2.setIcon(beautify_icon_c64bd619bb3c336b1ba2541a34e09754);
+            
+    
+            var layer_control_d4b0fdd0eec6195c6086eb8c2a75da00_layers = {
+                base_layers : {
+                    "openstreetmap" : tile_layer_ff87c1a9b2488d65fa4e13cf960d275b,
+                    "Stamen Terrain" : tile_layer_622ded6984d0580b64a74effa8ebddf8,
+                },
+                overlays :  {
+                    "\u041b\u0430\u043f\u0442\u0451\u043d\u043a\u0438 (4 \u0442\u043e\u0447\u043a\u0438)" : marker_cluster_7a737b2b4919d07ba2f43c9f69c44afd,
+                    "\ud83d\udd27 \u041a\u043e\u043d\u0441\u0442\u0440\u0443\u043a\u0442\u043e\u0440 \"\u0413\u043d\u0438\u043b\u044b\u0445 \u041f\u0440\u0443\u0434\u043a\u043e\u0432\"" : feature_group_698dbb83b057d86986384940347e4340,
+                    "\ud83d\udcda \u0412\u0441\u0435 \u0441\u0432\u044f\u0437\u0438 \u041b\u0430\u043f\u0442\u0451\u043d\u043a\u0438-\u0413\u0443\u0441\u0438\u043d\u043e (\u0430\u043b\u044c\u0442\u0435\u0440\u043d\u0430\u0442\u0438\u0432\u043d\u044b\u0435 \u043b\u043e\u043a\u0430\u0446\u0438\u0438)" : feature_group_b05fae1309ca3c1d943bb089ba66af22,
+                    "\ud83d\udcda \u0412\u0441\u0435 \u0441\u0432\u044f\u0437\u0438 \u0422\u044b\u0447\u043a\u0438\u043d\u043e-\u0421\u0442\u0440\u0443\u0436\u043a\u0438 (\u0430\u043b\u044c\u0442\u0435\u0440\u043d\u0430\u0442\u0438\u0432\u043d\u044b\u0435 \u043b\u043e\u043a\u0430\u0446\u0438\u0438)" : feature_group_32c5a351296bf3e31c5c43039cf1edcb,
+                },
+            };
+            let layer_control_d4b0fdd0eec6195c6086eb8c2a75da00 = L.control.layers(
+                layer_control_d4b0fdd0eec6195c6086eb8c2a75da00_layers.base_layers,
+                layer_control_d4b0fdd0eec6195c6086eb8c2a75da00_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": false,
+  "autoZIndex": true,
+}
+            ).addTo(map_c66c2b6bd59c1b9aa188c8d3db84b7f3);
+
+        
+</script>
+</html>
